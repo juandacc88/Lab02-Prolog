@@ -1,0 +1,25 @@
+% stats(Nombre, Daño, Consumo)
+stats(logica, 100, 10).
+stats(sigilo, 150, 30).
+stats(fuerza, 250, 50).
+
+% rival(Nombre, Vida, Debilidades)
+rival(riddler, 90, [logica, sigilo]).
+rival(bane, 240, [fuerza]).
+
+% Simulación de la misión
+mision(Energia) :-
+    findall(R, rival(R, _, _), ListaRival),
+    pelea(ListaRival, Energia).
+
+pelea([], E) :- 
+    format('Misión cumplida. Energía restante: ~w~n', [E]).
+
+pelea([NombreR|Sig], E) :-
+    rival(NombreR, HP, Debilidades),
+    stats(Poder, Dmg, Costo),
+    member(Poder, Debilidades),
+    Dmg >= HP,
+    E >= Costo,
+    NuevaE is E - Costo,
+    pelea(Sig, NuevaE).
