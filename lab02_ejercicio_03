@@ -1,0 +1,22 @@
+% Punto de inicio
+resolver_reinas(R) :- 
+    ubicar([], R).
+
+% Condición de victoria
+ubicar(T, T) :- 
+    length(T, 8).
+
+% Lógica de posicionamiento
+ubicar(Actual, Sol) :-
+    between(1, 8, Fila),
+    \+ member(Fila, Actual), % Evita misma fila
+    es_seguro(Fila, Actual, 1), % Evita diagonales
+    ubicar([Fila|Actual], Sol).
+
+% Chequeo de diagonales (Dist es la distancia entre columnas)
+es_seguro(_, [], _).
+es_seguro(F, [F1|Resto], Dist) :-
+    Diff is abs(F - F1),
+    Diff =\= Dist,
+    SigDist is Dist + 1,
+    es_seguro(F, Resto, SigDist).
